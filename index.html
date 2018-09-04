@@ -12,7 +12,7 @@
 </head>
 <body>
 <button id="AddEvent">Add New Event</button>
-<button id="AddEventNew">Add Event</button>
+
 <div class="modal" id="EventModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -28,7 +28,14 @@
                               <div class="col">
                                     <label for="EventName">Event Name</label>
                                 <input id="EventName" type="text" class="form-control" placeholder="Event name">
-                              </div>
+                                <div class="valid-feedback">
+                                        Looks good!
+                                      </div>
+
+                                <div class="invalid-feedback">
+                                        Please choose a username.
+                                      </div>
+                            </div>
                               <div class="col">
                                   <div class="form-group">
                                         <label for="DateOfEvent">Enter Date</label>
@@ -76,11 +83,13 @@
 
 
                                             </div>
+
                           </form>
             </div>
             <div class="modal-footer">
+                    <button type="submit" id="SaveEvent" class="btn btn-primary">Save changes</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" id="SaveEvent" class="btn btn-primary">Save changes</button>
+
             </div>
           </div>
         </div>
@@ -95,7 +104,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                        <form>
+                        <form id="">
                                 <div class="row">
                                   <div class="col">
                                         <label for="EditEventName">Event Name</label>
@@ -142,17 +151,19 @@
                                                 <div class="col">
                                                       <div class="form-group">
                                                               <label for="Edittextarea">Description</label>
-                                                           <textarea class="form-control" id="Edittextarea"></textarea>
+                                                           <textarea required class="form-control" id="Edittextarea"></textarea>
                                                             </div>
                                                 </div>
 
 
                                                 </div>
+
                               </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="button" id="EditSaveEvent" class="btn btn-primary">Save changes</button>
+
                 </div>
               </div>
             </div>
