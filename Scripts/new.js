@@ -1,11 +1,43 @@
 $(document).ready(() => {
+    const date = new Date();
+    const regExForTime = /[^:]\d/g;
     let eventArray = [];
-    let date = new Date();
-    let regExForTime = /[^:]\d/g;
+
+    let suffix = date.getDate() < 10 || date.getMonth() + 1 <= 9 ? "0" : "";
+
+    let day = date.getFullYear().toString() + "-" + suffix + (date.getMonth() + 1).toString() + "-" + suffix + date.getDate().toString();
     const AssignUnique = (selector, idBegin) => {
         $.each($(selector), function (ind) {
             $(this).attr('id', idBegin + parseInt(ind + 1));
         });
+    }
+    const setCookie = (arr) => {
+        if (localStorage) {
+            localStorage.setItem("Events", JSON.stringify(arr))
+        } else {
+            alert("Fuck Off Upgrade Your Browser Bitch")
+        }
+    }
+    const checkCokkie = () => {
+        let cookie = JSON.parse(localStorage.getItem("Events"))
+        if (cookie != null) {
+            console.log(cookie)
+            cookie.forEach((ele, ind) => {
+                let span = "<span class=float-right>" + "<button type=button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button type=button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"
+
+                $("<li />", {
+                        "class": "border-bottom media",
+                        id: "list" + ind
+                    })
+                    .append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + ele.name + "</h5>" + ele.date + "<br/>" + ele.from + ele.to + "</div>"))
+                    .append($(span, {
+                        "class": "hello",
+                        id: "button" + ind
+                    }))
+                    .appendTo("#listOfEvents");
+            })
+
+        }
     }
     $("#form").on("submit", () => {
         console.log(submit)
@@ -45,7 +77,12 @@ $(document).ready(() => {
             invalid: invalid
         }
     }
+const DateValidator=(dateVal,day)=>{
 
+
+
+  return  (parseInt(dateVal.match(/[^-]\d/g).join("")) < parseInt(day.match(/[^-]\d/g).join("")))
+}
     const checker = () => {
 
 
@@ -62,20 +99,7 @@ $(document).ready(() => {
         });
         $("#DateOfEvent").bind('input', function () {
             let name = $("#DateOfEvent").val()
-
-            let suffix = date.getDate() < 10 || date.getMonth() + 1 <= 9 ? "0" : "";
-
-            let day = date.getFullYear().toString() + "-" + suffix + (date.getMonth() + 1).toString() + "-" + suffix + date.getDate().toString();
-            let getDayFromValue = name.match(/[^-]\d/g);
-            let getDayFromDate = day.match(/[^-]\d/g);
-
-
-
-
-
-
-
-            let addClassForName = name === "" || name === undefined || name === null || (parseInt(getDayFromValue.join("")) < parseInt(getDayFromDate.join(""))) ? "is-invalid" : "is-valid"
+            let addClassForName = name === "" || name === undefined || name === null ||DateValidator(name,day)  ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#DateOfEvent").removeClass("is-valid") : $("#DateOfEvent").removeClass("is-invalid")
 
@@ -90,8 +114,8 @@ $(document).ready(() => {
             let milisecond = date.getTime();
             let time = new Date(milisecond)
             let timeNow = time.toLocaleTimeString()
-            console.log()
-            let addClassForName =parseInt(name.match(regExForTime).join(""))< parseInt(timeNow.match(regExForTime).join("").substring(0, 4))|| name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+            DateValidator($("#DateOfEvent").val(),day)
+            let addClassForName = parseInt(name.match(regExForTime).join("")) < parseInt(timeNow.match(regExForTime).join("").substring(0, 4)) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#from").removeClass("is-valid") : $("#from").removeClass("is-invalid")
 
@@ -159,7 +183,7 @@ $(document).ready(() => {
     $("#SaveEvent").bind("click", function (event) {
 
 
-        let counter = 0
+
         let name = $("#EventName").val();
         let date = $("#DateOfEvent").val();
         let from = $("#from").val();
@@ -178,7 +202,8 @@ $(document).ready(() => {
             Description: desc
         })
         i++
-
+        setCookie(eventArray)
+        checkCokkie()
         $("#listOfEvents").empty()
 
         $("#EventModal").modal("hide")
@@ -261,7 +286,7 @@ $(document).ready(() => {
         })
     }
 
-
+    console.log()
 
 
 })
