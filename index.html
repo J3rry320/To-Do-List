@@ -12,7 +12,7 @@
 </head>
 <body>
 <button id="AddEvent">Add New Event</button>
-
+<button id="AddEventNew">Add Event</button>
 <div class="modal" id="EventModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -85,6 +85,78 @@
           </div>
         </div>
       </div>
+      <div class="modal" id="EventEditModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Add an Event</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                        <form>
+                                <div class="row">
+                                  <div class="col">
+                                        <label for="EditEventName">Event Name</label>
+                                    <input id="EditEventName" type="text" class="form-control" placeholder="Event name">
+                                  </div>
+                                  <div class="col">
+                                      <div class="form-group">
+                                            <label for="DateOfEvent">Enter Date</label>
+                                            <input id="EditDateOfEvent" type="date" class="form-control" placeholder="Date">
+                                      </div>
+
+                                  </div>
+
+                                </div>
+                                <div class="row pt-2">
+                                        <div class="col">
+                                                <label for="Editfrom">From</label>
+                                          <input type="time" id="Editfrom" class="form-control" placeholder="From">
+                                        </div>
+                                        <div class="col">
+                                                <label for="Editto">To</label>
+                                          <input type="time" id="Editto" class="form-control" placeholder="To">
+                                        </div>
+
+                                      </div>
+                                      <div class="row pt-2">
+                                          <div class="col">
+                                                <div class="form-group">
+                                                        <label for="exampleFormControlSelect1">Event Kind</label>
+                                                        <select multiple class="form-control" id="exampleFormControlSelect1">
+                                                     <option value="Emergency">
+                                                            <button type="button" class="btn btn-primary">
+                                                                    Important <span class="badge badge-dark"><i class="fas text-dark fa-exclamation"></i></span>
+
+                                                                  </button>
+                                                     </option>
+                                                        </select>
+                                                      </div>
+                                          </div>
+
+
+                                          </div>
+                                          <div class="row pt-2">
+                                                <div class="col">
+                                                      <div class="form-group">
+                                                              <label for="Edittextarea">Description</label>
+                                                           <textarea class="form-control" id="Edittextarea"></textarea>
+                                                            </div>
+                                                </div>
+
+
+                                                </div>
+                              </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" id="EditSaveEvent" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
       <ul class="list-unstyled" id="listOfEvents">
 
