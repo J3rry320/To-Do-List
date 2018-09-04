@@ -16,28 +16,31 @@ $(document).ready(() => {
         $("#textarea").val("")
     }
     const checkAgain = () => {
-        let string=[];
-        let counter=0,invalid=0;
+        let string = [];
+        let counter = 0,
+            invalid = 0;
         $("#form :input").each(function () {
 
-    string.push(  $(this).attr("class"))
+            string.push($(this).attr("class"))
 
         })
-        string.forEach(ele=>{
+        string.forEach(ele => {
 
-            if(ele==="form-control is-valid"){
-         counter+=1
+            if (ele === "form-control is-valid") {
+                counter += 1
 
 
 
-            }
-            else{
-                invalid+=1
+            } else {
+                invalid += 1
 
             }
 
         })
-        return {valid:counter,invalid:invalid}
+        return {
+            valid: counter,
+            invalid: invalid
+        }
     }
 
     const checker = () => {
@@ -52,18 +55,30 @@ $(document).ready(() => {
 
 
             $("#EventName").addClass(addClassForName);
-        checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+            checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
         });
         $("#DateOfEvent").bind('input', function () {
             let name = $("#DateOfEvent").val()
+            let date = new Date();
+            let suffix = date.getDate() < 10 || date.getMonth() + 1 <= 9 ? "0" : "";
 
-            let addClassForName = name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+            let day = date.getFullYear().toString() + "-" + suffix + (date.getMonth() + 1).toString() + "-" + suffix + date.getDate().toString();
+            let getDayFromValue = name.match(/[^-]\d/g);
+            let getDayFromDate = day.match(/[^-]\d/g);
+
+
+
+
+
+
+
+            let addClassForName = name === "" || name === undefined || name === null ||(parseInt(getDayFromValue.join("")) < parseInt(getDayFromDate.join(""))) ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#DateOfEvent").removeClass("is-valid") : $("#DateOfEvent").removeClass("is-invalid")
 
 
             $("#DateOfEvent").addClass(addClassForName);
-            checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+            checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
         });
         $("#from").bind('input', function () {
@@ -75,7 +90,7 @@ $(document).ready(() => {
 
 
             $("#from").addClass(addClassForName);
-            checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+            checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
         });
         $("#to").bind('input', function () {
@@ -87,7 +102,7 @@ $(document).ready(() => {
 
 
             $("#to").addClass(addClassForName);
-            checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+            checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
         });
         $("#textarea").bind('input', function () {
@@ -100,7 +115,7 @@ $(document).ready(() => {
 
             $("#textarea").addClass(addClassForName);
 
-   checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+            checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
         });
 
 
