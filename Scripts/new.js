@@ -1,5 +1,7 @@
 $(document).ready(() => {
     let eventArray = [];
+    let date = new Date();
+    let regExForTime = /[^:]\d/g;
     const AssignUnique = (selector, idBegin) => {
         $.each($(selector), function (ind) {
             $(this).attr('id', idBegin + parseInt(ind + 1));
@@ -9,11 +11,12 @@ $(document).ready(() => {
         console.log(submit)
     })
     const emptyValue = () => {
-        $("#EventName").val("")
-        $("#DateOfEvent").val("")
-        $("#from").val("")
-        $("#to").val("")
-        $("#textarea").val("")
+        $("#EventName").val("").removeClass("is-valid")
+        $("#DateOfEvent").val("").removeClass("is-valid")
+        $("#from").val("").removeClass("is-valid")
+        $("#to").val("").removeClass("is-valid")
+        $("#textarea").val("").removeClass("is-valid")
+        $("#eventKind").val("").removeClass("is-valid")
     }
     const checkAgain = () => {
         let string = [];
@@ -59,7 +62,7 @@ $(document).ready(() => {
         });
         $("#DateOfEvent").bind('input', function () {
             let name = $("#DateOfEvent").val()
-            let date = new Date();
+
             let suffix = date.getDate() < 10 || date.getMonth() + 1 <= 9 ? "0" : "";
 
             let day = date.getFullYear().toString() + "-" + suffix + (date.getMonth() + 1).toString() + "-" + suffix + date.getDate().toString();
@@ -72,7 +75,7 @@ $(document).ready(() => {
 
 
 
-            let addClassForName = name === "" || name === undefined || name === null ||(parseInt(getDayFromValue.join("")) < parseInt(getDayFromDate.join(""))) ? "is-invalid" : "is-valid"
+            let addClassForName = name === "" || name === undefined || name === null || (parseInt(getDayFromValue.join("")) < parseInt(getDayFromDate.join(""))) ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#DateOfEvent").removeClass("is-valid") : $("#DateOfEvent").removeClass("is-invalid")
 
@@ -84,7 +87,11 @@ $(document).ready(() => {
         $("#from").bind('input', function () {
             let name = $("#from").val()
 
-            let addClassForName = name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+            let milisecond = date.getTime();
+            let time = new Date(milisecond)
+            let timeNow = time.toLocaleTimeString()
+            console.log()
+            let addClassForName =parseInt(name.match(regExForTime).join(""))< parseInt(timeNow.match(regExForTime).join("").substring(0, 4))|| name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#from").removeClass("is-valid") : $("#from").removeClass("is-invalid")
 
@@ -94,9 +101,12 @@ $(document).ready(() => {
 
         });
         $("#to").bind('input', function () {
-            let name = $("#to").val()
 
-            let addClassForName = name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+            let name = $("#to").val();
+            let from = $("#from").val();
+
+
+            let addClassForName = parseInt(name.match(regExForTime).join("")) <= parseInt(from.match(regExForTime).join("")) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#to").removeClass("is-valid") : $("#to").removeClass("is-invalid")
 
@@ -117,16 +127,31 @@ $(document).ready(() => {
 
             checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
         });
+        $("#eventKind").bind("input", () => {
+            let name = $("#eventKind").val()
 
 
-        //checker?$("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+            let addClassForName = name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+
+            addClassForName === "is-invalid" ? $("#eventKind").removeClass("is-valid") : $("#eventKind").removeClass("is-invalid")
+
+
+            $("#eventKind").addClass(addClassForName);
+
+            checkAgain().invalid !== 0 ? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
+        })
+
+
+
 
     }
 
 
     $("#AddEvent").bind("click", () => {
         emptyValue();
+        $("#SaveEvent").attr("disabled", true);
         $("#EventModal").modal();
+
         checker()
     })
     var i = 1;
@@ -140,7 +165,7 @@ $(document).ready(() => {
         let from = $("#from").val();
         let to = $("#to").val();
         let desc = $("#textarea").val();
-
+        let value = $("#eventKind").val();
 
 
         eventArray.push({
@@ -149,6 +174,7 @@ $(document).ready(() => {
             date: date,
             from: from,
             to: to,
+            value: value,
             Description: desc
         })
         i++
