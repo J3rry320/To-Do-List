@@ -16,16 +16,28 @@ $(document).ready(() => {
         $("#textarea").val("")
     }
     const checkAgain = () => {
-        let checkerVal;
+        let string=[];
+        let counter=0,invalid=0;
+        $("#form :input").each(function () {
 
-        if(!$('#EventName').val() && !$('#from').val() &&!$('#to').val()&&!$('#textarea').val()  ){
-            checkerVal=false
-        }
-        else{
-            checkerVal=true
-        }
+    string.push(  $(this).attr("class"))
 
-        return checkerVal
+        })
+        string.forEach(ele=>{
+
+            if(ele==="form-control is-valid"){
+         counter+=1
+
+
+
+            }
+            else{
+                invalid+=1
+
+            }
+
+        })
+        return {valid:counter,invalid:invalid}
     }
 
     const checker = () => {
@@ -40,7 +52,7 @@ $(document).ready(() => {
 
 
             $("#EventName").addClass(addClassForName);
-            console.log(checkAgain());
+        checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
         });
         $("#DateOfEvent").bind('input', function () {
             let name = $("#DateOfEvent").val()
@@ -51,7 +63,7 @@ $(document).ready(() => {
 
 
             $("#DateOfEvent").addClass(addClassForName);
-            console.log(checkAgain());
+            checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
         });
         $("#from").bind('input', function () {
@@ -63,7 +75,7 @@ $(document).ready(() => {
 
 
             $("#from").addClass(addClassForName);
-            console.log(checkAgain());
+            checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
         });
         $("#to").bind('input', function () {
@@ -75,7 +87,7 @@ $(document).ready(() => {
 
 
             $("#to").addClass(addClassForName);
-            console.log(checkAgain());
+            checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
         });
         $("#textarea").bind('input', function () {
@@ -87,9 +99,10 @@ $(document).ready(() => {
 
 
             $("#textarea").addClass(addClassForName);
-            console.log(checkAgain());
 
+   checkAgain().invalid!==0? $("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
         });
+
 
         //checker?$("#SaveEvent").attr("disabled", true) : $("#SaveEvent").attr("disabled", false)
 
