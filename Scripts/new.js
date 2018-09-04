@@ -80,7 +80,7 @@ $(document).ready(() => {
 
 const Edit=(e)=>{
     e.preventDefault()
-    console.log(e.target.id)
+   let id=e.target.id.charAt(e.target.id.length - 1) - 1
     let index = null;
 
     index = eventArray[e.target.id.charAt(e.target.id.length - 1) - 1]
@@ -92,10 +92,10 @@ const Edit=(e)=>{
     $("#Edittextarea").val(index.desc);
     $("#EventEditModal").modal();
 
-    Update(index);
+    Update(id,index);
 }
 
-    const Update = (index) => {
+    const Update = (id,index) => {
         $("#EditSaveEvent").unbind().on("click", () => {
 console.log("Recieved",index);
 
@@ -108,10 +108,11 @@ console.log("Recieved",index);
 
             $("#EventEditModal").modal("hide")
 
-
-
-            console.log("AAfter", index);
-            console.log("After", eventArray);
+            let span = "<span class=float-right>" + "<button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"
+            $(`#list${ id}`).empty().append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + $("#EditEventName").val() + "</h5>" + $("#EditDateOfEvent").val() + "<br/>" + $("#Editfrom").val()+ $("#Editto").val() + "</div>"))
+                .append($(span));
+                $(".button").addClass(" btn btn-danger")
+                $(".button-edit").addClass("ml-2 btn btn-info")
 
         })
     }
