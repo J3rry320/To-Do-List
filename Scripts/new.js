@@ -1,4 +1,5 @@
 $(document).ready(() => {
+
     const date = new Date();
     const regExForTime = /[^:]\d/g;
     let eventArray = [];
@@ -6,6 +7,31 @@ $(document).ready(() => {
     let suffix = date.getDate() < 10 || date.getMonth() + 1 <= 9 ? "0" : "";
 
     let day = date.getFullYear().toString() + "-" + suffix + (date.getMonth() + 1).toString() + "-" + suffix + date.getDate().toString();
+
+    const ListCreator=(arr)=>{
+        arr.forEach((ele, ind) => {
+
+            let span = "<span class=float-right>" + "<button type=button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button type=button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"
+
+            $("<li />", {
+                    "class": "border-bottom media",
+                    id: "list" + ind
+                })
+                .append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + ele.name + "</h5>" + ele.date + "<br/>" + ele.from + ele.to + "</div>"))
+                .append($(span, {
+                    "class": "hello",
+                    id: "button" + ind
+                }))
+                .appendTo("#listOfEvents");
+            $(".button").addClass(" btn btn-danger")
+            $(".button-edit").addClass("ml-2 btn btn-info")
+
+
+        })
+        AssignUnique(".button", "remove-");
+        AssignUnique(".button-edit", "edit-")
+    }
+
     const AssignUnique = (selector, idBegin) => {
         $.each($(selector), function (ind) {
             $(this).attr('id', idBegin + parseInt(ind + 1));
@@ -21,24 +47,19 @@ $(document).ready(() => {
     const checkCokkie = () => {
         let cookie = JSON.parse(localStorage.getItem("Events"))
         if (cookie != null) {
-            console.log(cookie)
-            cookie.forEach((ele, ind) => {
-                let span = "<span class=float-right>" + "<button type=button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button type=button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"
 
-                $("<li />", {
-                        "class": "border-bottom media",
-                        id: "list" + ind
-                    })
-                    .append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + ele.name + "</h5>" + ele.date + "<br/>" + ele.from + ele.to + "</div>"))
-                    .append($(span, {
-                        "class": "hello",
-                        id: "button" + ind
-                    }))
-                    .appendTo("#listOfEvents");
-            })
+           cookie.forEach(ele=>{
+                 eventArray.push(ele)
+           })
+ListCreator(eventArray)
+
+
+
 
         }
+
     }
+    checkCokkie()
     $("#form").on("submit", () => {
         console.log(submit)
     })
@@ -110,12 +131,19 @@ const DateValidator=(dateVal,day)=>{
         });
         $("#from").bind('input', function () {
             let name = $("#from").val()
+let addClassForName;
 
             let milisecond = date.getTime();
             let time = new Date(milisecond)
             let timeNow = time.toLocaleTimeString()
-            DateValidator($("#DateOfEvent").val(),day)
-            let addClassForName = parseInt(name.match(regExForTime).join("")) < parseInt(timeNow.match(regExForTime).join("").substring(0, 4)) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+         if( DateValidator(day,$("#DateOfEvent").val())===true){
+             addClassForName = "is-valid"
+
+         }
+         else{
+            addClassForName = parseInt(name.match(regExForTime).join("")) < parseInt(timeNow.match(regExForTime).join("").substring(0, 4)) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+         }
+
 
             addClassForName === "is-invalid" ? $("#from").removeClass("is-valid") : $("#from").removeClass("is-invalid")
 
@@ -130,7 +158,10 @@ const DateValidator=(dateVal,day)=>{
             let from = $("#from").val();
 
 
-            let addClassForName = parseInt(name.match(regExForTime).join("")) <= parseInt(from.match(regExForTime).join("")) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+
+            let    addClassForName = parseInt(name.match(regExForTime).join("")) <= parseInt(from.match(regExForTime).join("")) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+
+
 
             addClassForName === "is-invalid" ? $("#to").removeClass("is-valid") : $("#to").removeClass("is-invalid")
 
@@ -203,31 +234,12 @@ const DateValidator=(dateVal,day)=>{
         })
         i++
         setCookie(eventArray)
-        checkCokkie()
+
         $("#listOfEvents").empty()
 
         $("#EventModal").modal("hide")
-        eventArray.forEach((ele, ind) => {
+        ListCreator(eventArray)
 
-            let span = "<span class=float-right>" + "<button type=button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button type=button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"
-
-            $("<li />", {
-                    "class": "border-bottom media",
-                    id: "list" + ind
-                })
-                .append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + ele.name + "</h5>" + ele.date + "<br/>" + ele.from + ele.to + "</div>"))
-                .append($(span, {
-                    "class": "hello",
-                    id: "button" + ind
-                }))
-                .appendTo("#listOfEvents");
-            $(".button").addClass(" btn btn-danger")
-            $(".button-edit").addClass("ml-2 btn btn-info")
-
-
-        })
-        AssignUnique(".button", "remove-");
-        AssignUnique(".button-edit", "edit-")
         $(".button").unbind().on("click", remove)
         $(".button-edit").unbind().on("click", Edit)
 
@@ -243,6 +255,8 @@ const DateValidator=(dateVal,day)=>{
         e.preventDefault()
         let id = e.target.id.charAt(e.target.id.length - 1) - 1
         //TODO ALert
+        eventArray.splice(id,1)
+        setCookie(eventArray)
         $(`#list${id}`).remove()
 
     }
@@ -250,6 +264,7 @@ const DateValidator=(dateVal,day)=>{
     const Edit = (e) => {
         e.preventDefault()
         let id = e.target.id.charAt(e.target.id.length - 1) - 1
+        console.log(eventArray[id])
         let index = null;
 
         index = eventArray[e.target.id.charAt(e.target.id.length - 1) - 1]
@@ -268,23 +283,26 @@ const DateValidator=(dateVal,day)=>{
         $("#EditSaveEvent").unbind().on("click", () => {
             console.log("Recieved", index);
 
-            //eventArray.splice(e.target.id.charAt(e.target.id.length - 1) - 1,1)
+
             index.name = $("#EditEventName").val();
             index.date = $("#EditDateOfEvent").val();
             index.from = $("#Editfrom").val();
             index.to = $("#Editto").val();
             index.desc = $("#Edittextarea").val();
-
+            setCookie(eventArray)
             $("#EventEditModal").modal("hide")
 
 
             $(`#list${ id}`).empty().append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + $("#EditEventName").val() + "</h5>" + $("#EditDateOfEvent").val() + "<br/>" + $("#Editfrom").val() + $("#Editto").val() + "</div>"))
-                .append($("<span class=float-right>" + "<button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"));
+                .append($("<span class=float-left>" + "<button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"));
             $(".button").addClass(" btn btn-danger");
             $(".button-edit").addClass("ml-2 btn btn-info");
+            //eventArray.splice(index,1)
 
         })
     }
+    $(".button").unbind().on("click", remove)
+    $(".button-edit").unbind().on("click", Edit)
 
     console.log()
 
