@@ -1,3 +1,20 @@
-.hoverable{
+.hoverable {
     cursor: pointer;
+}
+body{
+    overflow-x: hidden;
+}
+.descriptor-icon {
+    font-size: 48px;
+    position: relative;
+}
+
+.bg-img{
+    background-image: url("https://images.pexels.com/photos/1020323/pexels-photo-1020323.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
+    background-position: fixed;
+    background-size: cover;
+    height: 100vh;
+}
+.content{
+    background-color:rgba(0,0,0,0.7)
 }

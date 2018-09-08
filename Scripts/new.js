@@ -1,5 +1,6 @@
 $(document).ready(() => {
-
+    //localStorage.clear();
+    $(document).off("click")
     const date = new Date();
     const regExForTime = /[^:]\d/g;
     let eventArray = [];
@@ -7,29 +8,44 @@ $(document).ready(() => {
     let suffix = date.getDate() < 10 || date.getMonth() + 1 <= 9 ? "0" : "";
 
     let day = date.getFullYear().toString() + "-" + suffix + (date.getMonth() + 1).toString() + "-" + suffix + date.getDate().toString();
-
-    const ListCreator=(arr)=>{
+    const iconCreator = (iconKind) => {
+        return iconKind === "Emergency" ? "fas fa-exclamation-triangle" : iconKind === "Family" ? "far fa-kiss-wink-heart" : iconKind === "Work" ? "fas fa-user-tie" : iconKind === "Hobby" ? "fas fa-headphones" : iconKind === "Leisure" ? "fas fa-coffee" : null
+    }
+    const ListCreator = (arr) => {
         arr.forEach((ele, ind) => {
+            console.log(ele)
 
-            let span = "<span class=float-right>" + "<button type=button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button type=button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"
+            let span = "<span class=float-right>" + "<button type=button class=button>" + "<i class=remove-icon></i>" + "</button>" + "<button type=button class=button-edit>" + "<i class=edit-icon></i>" + "</button>" + "</span>"
 
             $("<li />", {
-                    "class": "border-bottom media",
+                    "class": "border-bottom pt-5 mt-1 pb-4 media",
                     id: "list" + ind
                 })
-                .append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + ele.name + "</h5>" + ele.date + "<br/>" + ele.from + ele.to + "</div>"))
+                .append($("<i class=descriptor-icon></i>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + ele.name + "</h5>" + ele.date + "<br/>" + ele.from + ele.to + "</div>"))
                 .append($(span, {
                     "class": "hello",
                     id: "button" + ind
                 }))
                 .appendTo("#listOfEvents");
-            $(".button").addClass(" btn btn-danger")
-            $(".button-edit").addClass("ml-2 btn btn-info")
+
+
+            $(".remove-icon").addClass("fas fa-calendar-minus");
+            $(".edit-icon").addClass("fas fa-edit");
+            $(".button").addClass(" btn btn-danger");
+            $(".button-edit").addClass("ml-2 btn btn-info");
 
 
         })
+        for(let ind=0;ind<arr.length;ind++){
+
+            $(`#list${ind}`).find("i.descriptor-icon").addClass(`${iconCreator(arr[ind].value)} pt-3 pl-3 pr-3`)
+        }
+
+
         AssignUnique(".button", "remove-");
         AssignUnique(".button-edit", "edit-")
+        AssignUnique(".remove-icon","remove-icon")
+        AssignUnique(".edit-icon","edit-icon")
     }
 
     const AssignUnique = (selector, idBegin) => {
@@ -48,10 +64,10 @@ $(document).ready(() => {
         let cookie = JSON.parse(localStorage.getItem("Events"))
         if (cookie != null) {
 
-           cookie.forEach(ele=>{
-                 eventArray.push(ele)
-           })
-ListCreator(eventArray)
+            cookie.forEach(ele => {
+                eventArray.push(ele)
+            })
+            ListCreator(eventArray)
 
 
 
@@ -98,12 +114,13 @@ ListCreator(eventArray)
             invalid: invalid
         }
     }
-const DateValidator=(dateVal,day)=>{
+
+    const DateValidator = (dateVal, day) => {
 
 
 
-  return  (parseInt(dateVal.match(/[^-]\d/g).join("")) < parseInt(day.match(/[^-]\d/g).join("")))
-}
+        return (parseInt(dateVal.match(/[^-]\d/g).join("")) < parseInt(day.match(/[^-]\d/g).join("")))
+    }
     const checker = () => {
 
 
@@ -120,7 +137,7 @@ const DateValidator=(dateVal,day)=>{
         });
         $("#DateOfEvent").bind('input', function () {
             let name = $("#DateOfEvent").val()
-            let addClassForName = name === "" || name === undefined || name === null ||DateValidator(name,day)  ? "is-invalid" : "is-valid"
+            let addClassForName = name === "" || name === undefined || name === null || DateValidator(name, day) ? "is-invalid" : "is-valid"
 
             addClassForName === "is-invalid" ? $("#DateOfEvent").removeClass("is-valid") : $("#DateOfEvent").removeClass("is-invalid")
 
@@ -131,18 +148,17 @@ const DateValidator=(dateVal,day)=>{
         });
         $("#from").bind('input', function () {
             let name = $("#from").val()
-let addClassForName;
+            let addClassForName;
 
             let milisecond = date.getTime();
             let time = new Date(milisecond)
             let timeNow = time.toLocaleTimeString()
-         if( DateValidator(day,$("#DateOfEvent").val())===true){
-             addClassForName = "is-valid"
+            if (DateValidator(day, $("#DateOfEvent").val()) === true) {
+                addClassForName = "is-valid"
 
-         }
-         else{
-            addClassForName = parseInt(name.match(regExForTime).join("")) < parseInt(timeNow.match(regExForTime).join("").substring(0, 4)) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
-         }
+            } else {
+                addClassForName = parseInt(name.match(regExForTime).join("")) < parseInt(timeNow.match(regExForTime).join("").substring(0, 4)) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+            }
 
 
             addClassForName === "is-invalid" ? $("#from").removeClass("is-valid") : $("#from").removeClass("is-invalid")
@@ -159,7 +175,7 @@ let addClassForName;
 
 
 
-            let    addClassForName = parseInt(name.match(regExForTime).join("")) <= parseInt(from.match(regExForTime).join("")) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
+            let addClassForName = parseInt(name.match(regExForTime).join("")) <= parseInt(from.match(regExForTime).join("")) || name === "" || name === undefined || name === null ? "is-invalid" : "is-valid"
 
 
 
@@ -255,16 +271,18 @@ let addClassForName;
         e.preventDefault()
         let id = e.target.id.charAt(e.target.id.length - 1) - 1
         //TODO ALert
-        eventArray.splice(id,1)
+        eventArray.splice(id, 1)
         setCookie(eventArray)
         $(`#list${id}`).remove()
 
     }
 
     const Edit = (e) => {
-        e.preventDefault()
-        let id = e.target.id.charAt(e.target.id.length - 1) - 1
-        console.log(eventArray[id])
+
+
+
+        let id = e.target.id.charAt(e.target.id.length - 1)-1
+        console.log(id)
         let index = null;
 
         index = eventArray[e.target.id.charAt(e.target.id.length - 1) - 1]
@@ -274,6 +292,8 @@ let addClassForName;
         $("#Editfrom").val(index.from);
         $("#Editto").val(index.to);
         $("#Edittextarea").val(index.Description);
+        $("#EditeventKind").val(index.value);
+
         $("#EventEditModal").modal();
 
         Update(id, index);
@@ -283,28 +303,37 @@ let addClassForName;
         $("#EditSaveEvent").unbind().on("click", () => {
             console.log("Recieved", index);
 
-
             index.name = $("#EditEventName").val();
             index.date = $("#EditDateOfEvent").val();
             index.from = $("#Editfrom").val();
             index.to = $("#Editto").val();
             index.desc = $("#Edittextarea").val();
+            index.value=$("#EditeventKind").val()
             setCookie(eventArray)
             $("#EventEditModal").modal("hide")
 
 
-            $(`#list${ id}`).empty().append($("<img class=mr-3 alt=Generic placeholder image>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + $("#EditEventName").val() + "</h5>" + $("#EditDateOfEvent").val() + "<br/>" + $("#Editfrom").val() + $("#Editto").val() + "</div>"))
-                .append($("<span class=float-left>" + "<button class=button>" + "<i class=fas fa-calendar-minus></i>" + "</button>" + "<button class=button-edit>" + "<i class=fas fa-edit></i>" + "</button>" + "</span>"));
+            $(`#list${ id}`).empty().append($("<i class=descriptor-icon></i>" + "<div class=media-body>" + " <h5 class=mt-0 mb-1>" + index.name + "</h5>" + index.date+ "<br/>" + index.from + index.to + "</div>"))
+                .append($("<span class=float-right>" + "<button class=button>" + "<i class=remove-icon></i>" + "</button>" + "<button class=button-edit>" + "<i class=edit-icon></i>" + "</button>" + "</span>"));
+   $(`#list${id}`).find("i.descriptor-icon").addClass(`${iconCreator(index.value)} pt-3 pl-3 pr-3`)
+                $(".remove-icon").addClass("fas fa-calendar-minus");
+            $(".edit-icon").addClass("fas fa-edit")
             $(".button").addClass(" btn btn-danger");
             $(".button-edit").addClass("ml-2 btn btn-info");
+
             //eventArray.splice(index,1)
+            AssignUnique(".button", "remove-");
+            AssignUnique(".button-edit", "edit-")
+            AssignUnique(".remove-icon","remove-icon")
+            AssignUnique(".edit-icon","edit-icon")
 
         })
     }
-    $(".button").unbind().on("click", remove)
-    $(".button-edit").unbind().on("click", Edit)
-
-    console.log()
 
 
+    //console.log()
+$("body").on("click",".button",remove)
+$("body").on("click",".button-edit",Edit)
+
+   // $(".button-edit").off("click").on("click", Edit)
 })

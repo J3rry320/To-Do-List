@@ -15,7 +15,28 @@
 </head>
 
 <body>
-    <button id="AddEvent">Add New Event</button>
+
+    <div class="bg-img">
+        <div class="content text-white">
+            <center>
+                    <button class="btn btn-primary" id="AddEvent">Add New Event</button>
+            </center>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="list-unstyled" id="listOfEvents">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
 
     <div class="modal" id="EventModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -166,20 +187,30 @@
 
                         </div>
                         <div class="row pt-2">
+
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="eventKind">Event Kind</label>
-                                    <select multiple class="form-control" id="eventKind">
+                                    <label for="EditeventKind">Event Kind</label>
+                                    <select class="form-control" id="EditeventKind">
                                         <option value="Emergency">
-                                            <button type="button" class="btn btn-primary">
-                                                Important <span class="badge badge-dark"><i class="fas text-dark fa-exclamation"></i></span>
-
-                                            </button>
+                                            Important
+                                        </option>
+                                        <option value="Family">
+                                            Family
+                                        </option>
+                                        <option value="Work">
+                                            Work
+                                        </option>
+                                        <option value="Hobby">
+                                            Hobby
+                                        </option>
+                                        <option value="Leisure">
+                                            Leisure
                                         </option>
                                     </select>
+                                    <div class="invalid-feedback">Example invalid custom select feedback</div>
                                 </div>
                             </div>
-
 
                         </div>
                         <div class="row pt-2">
@@ -204,9 +235,7 @@
         </div>
     </div>
 
-    <ul class="list-unstyled" id="listOfEvents">
 
-    </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
